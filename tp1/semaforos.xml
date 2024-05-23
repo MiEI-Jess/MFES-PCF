@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>chan SENSOR_ON, SENSOR_OFF, MAIN_OFF, MAIN_ON, SEC_ON, TRIGGER;
+clock t;
+</declaration>
+	<template>
+		<name>Sensor</name>
+		<declaration>// Declarações globais do sensor
+int status; // Variável para armazenar o status do sensor (0 para OFF, 1 para ON)
+
+// Constantes para representar os estados do sensor
+const int OFF = 0;
+const int ON = 1;
+
+// Declaração de canais de comunicação, se necessário
+chan sensorChannel; // Canal para comunicação do sensor com outros templates
+</declaration>
+		<location id="id0" x="-331" y="-119">
+			<name x="-348" y="-102">OFF</name>
+		</location>
+		<location id="id1" x="-85" y="-119">
+			<name x="-95" y="-153">ON</name>
+		</location>
+		<init ref="id1"/>
+		<transition id="id2">
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="17" y="-127">TRIGGER!</label>
+			<nail x="8" y="-85"/>
+			<nail x="8" y="-153"/>
+		</transition>
+		<transition id="id3">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-238" y="-68">SEC_ON?</label>
+			<nail x="-212" y="-76"/>
+		</transition>
+		<transition id="id4">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-246" y="-187">MAIN_ON?</label>
+			<nail x="-212" y="-161"/>
+		</transition>
+	</template>
+	<template>
+		<name>SecondaryTrafficLight</name>
+		<declaration>// Declarações globais do semáforo secundário
+int status; // Variável para armazenar o status do semáforo secundário (0 para RED, 1 para GREEN, 2 para YELLOW)
+
+// Constantes para representar os estados do semáforo secundário
+const int RED = 0;
+const int GREEN = 1;
+const int YELLOW = 2;
+
+// Declaração de canais de comunicação, se necessário
+chan secondaryLightChannel; // Canal para comunicação do semáforo secundário com outros templates
+</declaration>
+		<location id="id5" x="-263" y="-646" color="#00ff00">
+			<name x="-288" y="-680">GREEN</name>
+			<label kind="invariant" x="-424" y="-646">t &lt;= 30</label>
+		</location>
+		<location id="id6" x="-399" y="-527" color="#ffff00">
+			<name x="-424" y="-501">YELLOW</name>
+			<label kind="invariant" x="-322" y="-595">t &lt;= 5</label>
+		</location>
+		<location id="id7" x="-535" y="-646" color="#ff0000">
+			<name x="-551" y="-680">RED</name>
+		</location>
+		<init ref="id7"/>
+		<transition id="id8">
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-424" y="-671">t &gt;= 30</label>
+			<label kind="assignment" x="-416" y="-518">t = 0</label>
+		</transition>
+		<transition id="id9">
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-339" y="-561">t &gt;= 5</label>
+			<label kind="synchronisation" x="-535" y="-578">MAIN_ON?</label>
+			<label kind="assignment" x="-271" y="-637">t = 0</label>
+		</transition>
+		<transition id="id10">
+			<source ref="id7"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-501" y="-561">t &gt;= 1</label>
+			<label kind="synchronisation" x="-331" y="-578">MAIN_OFF?</label>
+			<label kind="assignment" x="-569" y="-637">t = 0</label>
+			<nail x="-399" y="-646"/>
+		</transition>
+	</template>
+	<template>
+		<name>MainTrafficLight</name>
+		<declaration>// Declarações globais do semáforo principal
+int status; // Variável para armazenar o status do semáforo principal (0 para GREEN, 1 para YELLOW, 2 para RED)
+
+// Constantes para representar os estados do semáforo principal
+const int GREEN = 0;
+const int YELLOW = 1;
+const int RED = 2;
+
+// Declaração de canais de comunicação, se necessário
+chan mainLightChannel; // Canal para comunicação do semáforo principal com outros templates
+</declaration>
+		<location id="id11" x="-799" y="-629" color="#ff0000">
+			<name x="-807" y="-663">RED</name>
+		</location>
+		<location id="id12" x="-1028" y="-629" color="#ffff00">
+			<name x="-1054" y="-663">YELLOW</name>
+			<label kind="invariant" x="-943" y="-629">t &lt;= 5</label>
+		</location>
+		<location id="id13" x="-1258" y="-629" color="#00ff00">
+			<name x="-1275" y="-663">GREEN</name>
+		</location>
+		<init ref="id13"/>
+		<transition id="id14">
+			<source ref="id13"/>
+			<target ref="id12"/>
+			<label kind="guard" x="-1173" y="-620">t &gt;= 30</label>
+			<label kind="synchronisation" x="-1181" y="-654">TRIGGER?</label>
+			<label kind="assignment" x="-1045" y="-620">t=0</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id12"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-943" y="-612">t &gt;= 5</label>
+			<label kind="synchronisation" x="-952" y="-654">MAIN_OFF!</label>
+			<label kind="assignment" x="-1275" y="-620">t=0</label>
+		</transition>
+		<transition id="id16">
+			<source ref="id11"/>
+			<target ref="id13"/>
+			<label kind="guard" x="-1147" y="-518">t &gt;= 1</label>
+			<label kind="synchronisation" x="-960" y="-518">MAIN_ON!</label>
+			<label kind="assignment" x="-807" y="-620">t=0</label>
+			<nail x="-1028" y="-475"/>
+		</transition>
+	</template>
+	<system>system Sensor, MainTrafficLight, SecondaryTrafficLight;</system>
+	<queries>
+		<query>
+			<formula>A&lt;&gt; (E&lt;&gt; (SecondaryTrafficLight.status == GREEN))
+A&lt;&gt; (E&lt;&gt; (MainTrafficLight.status == RED))
+A&lt;&gt; (!deadlock)
+A&lt;&gt; (!(MainTrafficLight.status == GREEN &amp;&amp; SecondaryTrafficLight.status == GREEN)
+A&lt;&gt; (Sensor.status == ON) -&gt; AF (SecondaryTrafficLight.status == GREEN || MainTrafficLight.status == GREEN))</formula>
+			<comment/>
+		</query>
+	</queries>
+</nta>

@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>chan SENSOR_ON, SENSOR_OFF, MAIN_OFF, SEC_ON, TRIGGER;
+
+clock t;
+</declaration>
+	<template>
+		<name>Template</name>
+		<location id="id0" x="0" y="0">
+		</location>
+		<init ref="id0"/>
+	</template>
+	<template>
+		<name>Controller</name>
+		<location id="id1" x="-561" y="-314">
+			<label kind="invariant" x="-629" y="-322">MAIN_ON</label>
+		</location>
+		<location id="id2" x="-51" y="-314">
+			<label kind="invariant" x="-34" y="-323">SEC_ON</label>
+		</location>
+		<location id="id3" x="-306" y="-416" color="#ff0000">
+		</location>
+		<location id="id4" x="-306" y="-357" color="#00ff00">
+		</location>
+		<location id="id5" x="-306" y="-246" color="#00ff00">
+		</location>
+		<location id="id6" x="-306" y="-170" color="#ff0000">
+		</location>
+		<init ref="id1"/>
+		<transition id="id7">
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="42" y="-314">TRIG_MAIN_OFF!</label>
+			<nail x="33" y="-272"/>
+			<nail x="33" y="-348"/>
+		</transition>
+		<transition id="id8">
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-748" y="-314">TRIG_MAIN_ON!</label>
+			<nail x="-638" y="-272"/>
+			<nail x="-638" y="-348"/>
+		</transition>
+		<transition id="id9">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-357" y="-476">TRIG_MAIN_ON!</label>
+			<nail x="-289" y="-450"/>
+			<nail x="-332" y="-459"/>
+		</transition>
+		<transition id="id10">
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-293" y="-165">TRIG_MAIN_OFF!</label>
+			<nail x="-281" y="-127"/>
+			<nail x="-323" y="-127"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-357" y="-297">TRIG_MAIN_OFF!</label>
+			<nail x="-281" y="-280"/>
+			<nail x="-323" y="-280"/>
+		</transition>
+		<transition id="id12">
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-348" y="-323">TRIG_MAIN_ON!</label>
+			<nail x="-281" y="-323"/>
+			<nail x="-323" y="-323"/>
+		</transition>
+		<transition id="id13" color="#ffff00">
+			<source ref="id6"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-476" y="-221">TRIG_SEC_LOW!</label>
+			<nail x="-315" y="-178"/>
+			<nail x="-349" y="-195"/>
+			<nail x="-468" y="-238"/>
+		</transition>
+		<transition id="id14" color="#00ff00">
+			<source ref="id6"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-493" y="-178">TRIG_SEC_NO!</label>
+			<nail x="-510" y="-195"/>
+		</transition>
+		<transition id="id15" color="#ff0000">
+			<source ref="id5"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-459" y="-263">TRIG_MAIN_HIGH?</label>
+			<nail x="-315" y="-255"/>
+			<nail x="-468" y="-272"/>
+		</transition>
+		<transition id="id16" color="#ff0000">
+			<source ref="id2"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-221" y="-178">TRIG_MAIN_HIGH?</label>
+			<nail x="-94" y="-195"/>
+		</transition>
+		<transition id="id17" color="#ffff00">
+			<source ref="id2"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-230" y="-263">TRIG_SEC_LOW?</label>
+			<nail x="-136" y="-280"/>
+		</transition>
+		<transition id="id18" color="#00ff00">
+			<source ref="id2"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-213" y="-221">TRIG_SEC_NO?</label>
+			<nail x="-119" y="-229"/>
+			<nail x="-238" y="-221"/>
+		</transition>
+		<transition id="id19" color="#ff0000">
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-230" y="-348">TRIG_SEC_HIGH?</label>
+			<nail x="-145" y="-357"/>
+		</transition>
+		<transition id="id20" color="#00ff00">
+			<source ref="id1"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-476" y="-357">TRIG_MAIN_NO?</label>
+			<nail x="-459" y="-365"/>
+		</transition>
+		<transition id="id21" color="#ffff00">
+			<source ref="id1"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-485" y="-399">TRIG_MAIN_LOW?</label>
+			<nail x="-476" y="-408"/>
+			<nail x="-374" y="-399"/>
+		</transition>
+		<transition id="id22" color="#00ff00">
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-238" y="-391">TRIG_MAIN_NO?</label>
+			<nail x="-128" y="-391"/>
+		</transition>
+		<transition id="id23" color="#ffff00">
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-238" y="-433">TRIG_MAIN_LOW?</label>
+			<nail x="-315" y="-425"/>
+			<nail x="-119" y="-442"/>
+		</transition>
+		<transition id="id24" color="#ff0000">
+			<source ref="id1"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-451" y="-467">t &gt;= 20</label>
+			<label kind="synchronisation" x="-502" y="-433">TRIG_SEC_HIGH?</label>
+			<nail x="-502" y="-450"/>
+			<nail x="-315" y="-425"/>
+		</transition>
+	</template>
+	<template>
+		<name>Secondary_Sensor</name>
+		<location id="id25" x="-544" y="-51" color="#ff0000">
+			<name x="-554" y="-85">NO</name>
+		</location>
+		<location id="id26" x="-77" y="-51" color="#00ff00">
+			<name x="-87" y="-85">HIGH</name>
+		</location>
+		<location id="id27" x="-306" y="-51" color="#ffff00">
+			<name x="-323" y="-85">LOW</name>
+		</location>
+		<init ref="id25"/>
+		<transition id="id28">
+			<source ref="id25"/>
+			<target ref="id26"/>
+			<label kind="synchronisation" x="-374" y="-170">TRIG_SEC_HIGH!</label>
+			<nail x="-425" y="-144"/>
+			<nail x="-205" y="-145"/>
+		</transition>
+		<transition id="id29">
+			<source ref="id27"/>
+			<target ref="id25"/>
+			<label kind="synchronisation" x="-476" y="-17">TRIG_SEC_NO!</label>
+			<nail x="-417" y="-25"/>
+		</transition>
+		<transition id="id30">
+			<source ref="id26"/>
+			<target ref="id27"/>
+			<label kind="synchronisation" x="-263" y="-17">TRIG_SEC_LOW!</label>
+			<nail x="-222" y="-26"/>
+		</transition>
+		<transition id="id31">
+			<source ref="id26"/>
+			<target ref="id25"/>
+			<label kind="synchronisation" x="-357" y="68">TRIG_SEC_NO!</label>
+			<nail x="-170" y="68"/>
+			<nail x="-434" y="68"/>
+		</transition>
+		<transition id="id32">
+			<source ref="id27"/>
+			<target ref="id26"/>
+			<label kind="synchronisation" x="-272" y="-93">TRIG_SEC_HIGH!</label>
+			<nail x="-222" y="-68"/>
+		</transition>
+		<transition id="id33">
+			<source ref="id25"/>
+			<target ref="id27"/>
+			<label kind="synchronisation" x="-476" y="-102">TRIG_SEC_LOW!</label>
+			<nail x="-417" y="-76"/>
+		</transition>
+	</template>
+	<template>
+		<name>Main_Sensor</name>
+		<location id="id34" x="-722" y="-153" color="#ff0000">
+			<name x="-732" y="-187">NO</name>
+		</location>
+		<location id="id35" x="-255" y="-153" color="#00ff00">
+			<name x="-265" y="-187">HIGH</name>
+		</location>
+		<location id="id36" x="-484" y="-153" color="#ffff00">
+			<name x="-501" y="-187">LOW</name>
+		</location>
+		<init ref="id34"/>
+		<transition id="id37">
+			<source ref="id34"/>
+			<target ref="id35"/>
+			<label kind="synchronisation" x="-552" y="-280">TRIG_MAIN_HIGH!</label>
+			<nail x="-603" y="-246"/>
+			<nail x="-383" y="-247"/>
+		</transition>
+		<transition id="id38">
+			<source ref="id36"/>
+			<target ref="id34"/>
+			<label kind="synchronisation" x="-646" y="-119">TRIG_MAIN_NO!</label>
+			<nail x="-595" y="-127"/>
+		</transition>
+		<transition id="id39">
+			<source ref="id35"/>
+			<target ref="id36"/>
+			<label kind="synchronisation" x="-442" y="-119">TRIG_MAIN_LOW!</label>
+			<nail x="-400" y="-128"/>
+		</transition>
+		<transition id="id40">
+			<source ref="id35"/>
+			<target ref="id34"/>
+			<label kind="synchronisation" x="-535" y="-25">TRIG_MAIN_NO!</label>
+			<nail x="-348" y="-34"/>
+			<nail x="-612" y="-34"/>
+		</transition>
+		<transition id="id41">
+			<source ref="id36"/>
+			<target ref="id35"/>
+			<label kind="synchronisation" x="-450" y="-195">TRIG_MAIN_HIGH!</label>
+			<nail x="-400" y="-170"/>
+		</transition>
+		<transition id="id42">
+			<source ref="id34"/>
+			<target ref="id36"/>
+			<label kind="synchronisation" x="-646" y="-204">TRIG_MAIN_LOW!</label>
+			<nail x="-595" y="-178"/>
+		</transition>
+	</template>
+	<template>
+		<name>SecondaryTrafficLight</name>
+		<declaration>bool wait = true;</declaration>
+		<location id="id43" x="-620" y="-705" color="#00ff00">
+			<name x="-645" y="-739">GREEN</name>
+			<label kind="invariant" x="-630" y="-688">!changeLight</label>
+		</location>
+		<location id="id44" x="-756" y="-586" color="#ffff00">
+			<name x="-781" y="-560">YELLOW</name>
+			<label kind="invariant" x="-884" y="-637">t &lt;= 5</label>
+		</location>
+		<location id="id45" x="-893" y="-705" color="#ff0000">
+			<name x="-909" y="-739">RED</name>
+			<label kind="invariant" x="-1079" y="-662">t &lt;= 1 || wait</label>
+		</location>
+		<init ref="id45"/>
+		<transition id="id46">
+			<source ref="id45"/>
+			<target ref="id45"/>
+			<label kind="guard" x="-1045" y="-722">t &gt;= 1 &amp;&amp; !wait</label>
+			<label kind="assignment" x="-1079" y="-696">wait = true</label>
+			<nail x="-978" y="-722"/>
+			<nail x="-978" y="-688"/>
+			<nail x="-978" y="-671"/>
+		</transition>
+		<transition id="id47">
+			<source ref="id43"/>
+			<target ref="id44"/>
+			<label kind="guard" x="-738" y="-679">changeLight</label>
+			<label kind="assignment" x="-773" y="-577">t = 0, changeLight = false</label>
+		</transition>
+		<transition id="id48">
+			<source ref="id44"/>
+			<target ref="id45"/>
+			<label kind="guard" x="-884" y="-620">t &gt;= 5</label>
+			<label kind="assignment" x="-628" y="-696">t = 0</label>
+		</transition>
+		<transition id="id49">
+			<source ref="id45"/>
+			<target ref="id43"/>
+			<label kind="synchronisation" x="-790" y="-731">MAIN_OFF?</label>
+			<label kind="assignment" x="-875" y="-705">t = 0, wait = false</label>
+			<nail x="-748" y="-705"/>
+		</transition>
+	</template>
+	<template>
+		<name>MainTrafficLight</name>
+		<declaration>bool wait = false;</declaration>
+		<location id="id50" x="-799" y="-629" color="#ff0000">
+			<name x="-807" y="-663">RED</name>
+			<label kind="invariant" x="-697" y="-620">t &lt;= 1 || wait</label>
+		</location>
+		<location id="id51" x="-1028" y="-629" color="#ffff00">
+			<name x="-1054" y="-663">YELLOW</name>
+			<label kind="invariant" x="-952" y="-654">t &lt;= 5</label>
+		</location>
+		<location id="id52" x="-1232" y="-629" color="#00ff00">
+			<name x="-1249" y="-663">GREEN</name>
+		</location>
+		<init ref="id52"/>
+		<transition id="id53">
+			<source ref="id50"/>
+			<target ref="id50"/>
+			<label kind="guard" x="-697" y="-645">t &gt;= 1</label>
+			<label kind="synchronisation" x="-773" y="-671">MAIN_OFF!</label>
+			<label kind="assignment" x="-697" y="-662">wait = true</label>
+			<nail x="-705" y="-654"/>
+			<nail x="-705" y="-603"/>
+		</transition>
+		<transition id="id54">
+			<source ref="id52"/>
+			<target ref="id51"/>
+			<label kind="guard" x="-1173" y="-620">t &gt;= 30</label>
+			<label kind="synchronisation" x="-1190" y="-654">TRIG_MAIN_OFF?</label>
+			<label kind="assignment" x="-1045" y="-620">t=0</label>
+		</transition>
+		<transition id="id55">
+			<source ref="id51"/>
+			<target ref="id50"/>
+			<label kind="guard" x="-952" y="-629">t &gt;= 5</label>
+			<label kind="assignment" x="-1275" y="-620">t=0</label>
+		</transition>
+		<transition id="id56">
+			<source ref="id50"/>
+			<target ref="id52"/>
+			<label kind="guard" x="-986" y="-476">t &gt;= 1</label>
+			<label kind="synchronisation" x="-926" y="-535">TRIG_MAIN_ON?</label>
+			<label kind="assignment" x="-807" y="-595">t=0, wait = false</label>
+			<nail x="-1028" y="-467"/>
+		</transition>
+	</template>
+	<system>system Controller, Main_Sensor, Secondary_Sensor, MainTrafficLight, SecondaryTrafficLight;</system>
+	<queries>
+		<option key="--diagnostic" value="0"/>
+		<query>
+			<formula>(Sensor.OFF &amp;&amp; SecondaryTrafficLight.RED &amp;&amp; !MainTrafficLight.RED) --&gt; SecondaryTrafficLight.GREEN</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:03 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment/>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (SecondaryTrafficLight.GREEN)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:18 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (MainTrafficLight.GREEN)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:28 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (MainTrafficLight.RED)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:37 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+		<query>
+			<formula>A[] !(MainTrafficLight.GREEN &amp;&amp; SecondaryTrafficLight.GREEN)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:45 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+	</queries>
+</nta>

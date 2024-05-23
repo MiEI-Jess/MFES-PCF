@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>chan SENSOR_ON, SENSOR_OFF, MAIN_OFF, SEC_ON, TRIGGER;
+broadcast chan MAIN_ON;
+clock t;
+</declaration>
+	<template>
+		<name>Sensor</name>
+		<location id="id0" x="-331" y="-119">
+			<name x="-348" y="-102">OFF</name>
+		</location>
+		<location id="id1" x="-85" y="-119">
+			<name x="-95" y="-153">ON</name>
+		</location>
+		<init ref="id1"/>
+		<transition id="id2">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-238" y="-68">TRIGGER!</label>
+			<nail x="-212" y="-76"/>
+		</transition>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-246" y="-187">MAIN_ON?</label>
+			<nail x="-212" y="-161"/>
+		</transition>
+	</template>
+	<template>
+		<name>SecondaryTrafficLight</name>
+		<declaration>bool wait = true;</declaration>
+		<location id="id4" x="-263" y="-646" color="#00ff00">
+			<name x="-288" y="-680">GREEN</name>
+		</location>
+		<location id="id5" x="-399" y="-527" color="#ffff00">
+			<name x="-424" y="-501">YELLOW</name>
+		</location>
+		<location id="id6" x="-536" y="-646" color="#ff0000">
+			<name x="-552" y="-680">RED</name>
+			<label kind="invariant" x="-722" y="-603">t &lt;= 1 || wait</label>
+		</location>
+		<init ref="id6"/>
+		<transition id="id7">
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-688" y="-663">t &gt;= 1 &amp;&amp; !wait</label>
+			<label kind="synchronisation" x="-612" y="-688">MAIN_ON!</label>
+			<label kind="assignment" x="-722" y="-637">wait = true</label>
+			<nail x="-621" y="-663"/>
+			<nail x="-621" y="-629"/>
+			<nail x="-621" y="-612"/>
+		</transition>
+		<transition id="id8">
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="assignment" x="-416" y="-518">t = 0</label>
+		</transition>
+		<transition id="id9">
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="assignment" x="-271" y="-637">t = 0</label>
+		</transition>
+		<transition id="id10">
+			<source ref="id6"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-425" y="-697">t &gt;= 1</label>
+			<label kind="synchronisation" x="-434" y="-671">MAIN_OFF?</label>
+			<label kind="assignment" x="-518" y="-646">t = 0, wait = false</label>
+			<nail x="-391" y="-646"/>
+		</transition>
+	</template>
+	<template>
+		<name>MainTrafficLight</name>
+		<declaration>bool wait = false;</declaration>
+		<location id="id11" x="-799" y="-629" color="#ff0000">
+			<name x="-807" y="-663">RED</name>
+			<label kind="invariant" x="-697" y="-620">t &lt;= 1 || wait</label>
+		</location>
+		<location id="id12" x="-1028" y="-629" color="#ffff00">
+			<name x="-1054" y="-663">YELLOW</name>
+			<label kind="invariant" x="-943" y="-680">t &lt;= 5</label>
+		</location>
+		<location id="id13" x="-1232" y="-629" color="#00ff00">
+			<name x="-1249" y="-663">GREEN</name>
+		</location>
+		<init ref="id13"/>
+		<transition id="id14">
+			<source ref="id11"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-697" y="-637">t &gt;= 1</label>
+			<label kind="synchronisation" x="-781" y="-654">MAIN_OFF!</label>
+			<label kind="assignment" x="-697" y="-654">wait = true</label>
+			<nail x="-705" y="-646"/>
+			<nail x="-705" y="-595"/>
+		</transition>
+		<transition id="id15">
+			<source ref="id13"/>
+			<target ref="id12"/>
+			<label kind="guard" x="-1173" y="-620">t &gt;= 30</label>
+			<label kind="synchronisation" x="-1181" y="-654">TRIGGER?</label>
+			<label kind="assignment" x="-1045" y="-620">t=0</label>
+		</transition>
+		<transition id="id16">
+			<source ref="id12"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-943" y="-620">t &gt;= 5</label>
+			<label kind="assignment" x="-1275" y="-620">t=0</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id11"/>
+			<target ref="id13"/>
+			<label kind="guard" x="-1003" y="-468">t &gt;= 1</label>
+			<label kind="synchronisation" x="-1003" y="-493">MAIN_ON?</label>
+			<label kind="assignment" x="-833" y="-603">t=0, wait = false</label>
+			<nail x="-1071" y="-450"/>
+		</transition>
+	</template>
+	<system>system Sensor, MainTrafficLight, SecondaryTrafficLight;</system>
+	<queries>
+		<option key="--diagnostic" value="0"/>
+		<query>
+			<formula>(Sensor.OFF &amp;&amp; SecondaryTrafficLight.RED &amp;&amp; !MainTrafficLight.RED) --&gt; SecondaryTrafficLight.GREEN</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:03 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment/>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (SecondaryTrafficLight.GREEN)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:18 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (MainTrafficLight.GREEN)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:28 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (MainTrafficLight.RED)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:37 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+		<query>
+			<formula>A[] !(MainTrafficLight.GREEN &amp;&amp; SecondaryTrafficLight.GREEN)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-04-06 13:05:45 +0100">
+				<option key="--diagnostic" value="0"/>
+			</result>
+		</query>
+	</queries>
+</nta>
