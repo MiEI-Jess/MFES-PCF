@@ -28,7 +28,6 @@ onRight s (o:os) | o == Right () = onRight s os
                  | otherwise = onRight s os 
 
 -- The time that each adventurer needs to cross the bridge
--- To implement 
 getTimeAdv :: Adventurer -> Int
 getTimeAdv P1 = 1
 getTimeAdv P2 = 2
@@ -106,13 +105,13 @@ exec :: Int -> State -> ListDur State
 exec 0 s = LD [Duration (0,s)]
 exec n s = concatMap (\next -> exec (n-1) next) validNextStates 
   where 
-    validNextStates = map (\play -> getValue play) validNextPlays 
-    validNextPlays = remLD $ allValidPlays s
+    validNextStates = map (\state -> getValue state) validNextPlays -- [State]
+    validNextPlays = remLD $ allValidPlays s -- [Duration a]
 
 {-- Is it possible for all adventurers to be on the other side
 in <=17 min and not exceeding 5 moves ? --}
 leq17 :: Bool
-leq17 = any (\s -> s == gFinal && getDuration s <= 17) validSequences
+leq17 = any (\s -> getValue s == gFinal && getDuration s <= 17) validSequences
   where
     validSequences = remLD $ exec 5 gInit
 
