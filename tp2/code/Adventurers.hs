@@ -6,26 +6,7 @@ import DurationMonad
 -- The list of adventurers
 data Adventurer = P1 | P2 | P5 | P10 deriving (Show,Eq)
 -- Adventurers + the lantern
-type Objects = Either Adventurer ()
-
-allAdvs :: [Objects]
-allAdvs = [(Left P1), (Left P2), (Left P5), (Left P10)]
-
-getAdv :: Objects -> Adventurer
-getAdv (Left a) = a
-
-toObjects :: Adventurer -> Objects
-toObjects a = (Left a)
-
-onLeft :: State -> [Objects] -> [Objects]
-onLeft s (o:os) | o == Right () = onLeft s os
-                | s o = onLeft s os
-                | otherwise = o : onLeft s os   
-
-onRight :: State -> [Objects] -> [Objects]
-onRight s (o:os) | o == Right () = onRight s os
-                 | s o = o : onRight s os
-                 | otherwise = onRight s os 
+type Objects = Either Adventurer () 
 
 -- The time that each adventurer needs to cross the bridge
 getTimeAdv :: Adventurer -> Int
@@ -76,50 +57,50 @@ mChangeState os s = foldr changeState s os
 {-- For a given state of the game, the function presents all the
 possible moves that the adventurers can make.  --}
 allValidPlays :: State -> ListDur State
-allValidPlays s | s == gFinal = LD [] -- if all have crossed
-                | s (Right ()) = LD $ toRightStates 
-                | otherwise =  LD $ toLeftStates
-  where 
-    toRightPlays = (toLists $ onLeft s allAdvs) ++ (rmPairs $ makePairs $ onLeft s allAdvs) -- plays on left to right
-    toLeftPlays = (toLists $ onRight s allAdvs) ++ (rmPairs $ makePairs $ onRight s allAdvs) -- plays on right to left
-    toRightStates = allValidPlaysAux s toRightPlays
-    toLeftStates = allValidPlaysAux s toLeftPlays
+allValidPlays s = manyChoice $ map (makeMove s) (validPairs s)
 
-allValidPlaysAux :: State -> [[Objects]] -> [Duration State]
-allValidPlaysAux s (o:os) = Duration(maxDuration o, mChangeState o s) : allValidPlaysAux s os     
-  
-nextState :: State -> (Objects, Objects) -> State
-nextState s (a1,a2) = mChangeState [a1,a2] s 
+-- Generates valid pairs of adventurers based on the side of the lantern
+validPairs :: State -> [(Adventurer, Adventurer)]
+validPairs s | s (Right ()) = map (\a -> (a,a)) advsOnLanternSide -- One should return
+             | otherwise    = makePairs advsOnLanternSide -- Two can cross
+  where
+    advsOnLanternSide = filter (\a -> s (Left a) == s (Right ())) [P1, P2, P5, P10]
 
-maxDuration :: [Objects] -> Int
-maxDuration [] = 0
-maxDuration [a] = getTimeAdv $ getAdv a 
-maxDuration (a1:a2:as) = max (getTimeAdv $ getAdv a1) (maxDuration (a2:as))
+-- Creates a move based on a pair of adventurers and the current state
+makeMove :: State -> (Adventurer, Adventurer) -> ListDur State
+makeMove s (a1, a2) = LD [Duration (moveTime, newState)]
+  where
+    moveTime = max (getTimeAdv a1) (getTimeAdv a2)
+    newState = stateChange s (a1,a2)
+
+-- Change the state dependong on the side of the Lantern
+stateChange :: State -> (Adventurer, Adventurer) -> State
+stateChange s (a1,a2) | s (Right ()) = mChangeState [Left a1, Right ()] s -- One return
+                      | otherwise    = mChangeState [Left a1, Left a2, Right ()] s -- Two cross
 
 {-- For a given number n and initial state, the function calculates
 all possible n-sequences of moves that the adventures can make --}
-
--- First calculate all next valid plays for the current state
--- Then repeat it n times to reach all possible states after n sequences
 exec :: Int -> State -> ListDur State
-exec 0 s = LD [Duration (0,s)]
-exec n s = concatMap (\next -> exec (n-1) next) validNextStates 
-  where 
-    validNextStates = map (\state -> getValue state) validNextPlays -- [State]
-    validNextPlays = remLD $ allValidPlays s -- [Duration a]
+exec 0 s = return s
+exec n s = do
+  s' <- allValidPlays s
+  exec (n-1) s'
 
 {-- Is it possible for all adventurers to be on the other side
 in <=17 min and not exceeding 5 moves ? --}
 leq17 :: Bool
-leq17 = any (\s -> getValue s == gFinal && getDuration s <= 17) validSequences
+leq17 = any (\(Duration (t, s)) -> t <= 17 && all (\obj -> s obj) allObjs) validPlays
   where
-    validSequences = remLD $ exec 5 gInit
+    allObjs = [Right (), Left P1, Left P2, Left P5, Left P10]
+    validPlays = remLD $ exec 5 gInit
 
 {-- Is it possible for all adventurers to be on the other side
 in < 17 min ? --}
--- To implement
 l17 :: Bool
-l17 = undefined
+l17 = any (\(Duration (t, s)) -> t < 17 && all (\obj -> s obj) allObjs) validPlays
+  where
+    allObjs = [Right (), Left P1, Left P2, Left P5, Left P10]
+    validPlays = remLD $ exec 5 gInit
 
 --------------------------------------------------------------------------
 {-- Implementation of the monad used for the problem of the adventurers.
